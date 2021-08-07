@@ -24,10 +24,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-      - uses: borales/actions-yarn@v2.3.0
-        with:
-          cmd: install # will run `yarn install` command
       - run: |
+          npm install --production=false
+          npm run build
           git add -A
           git commit -m "New Build"
           git push
