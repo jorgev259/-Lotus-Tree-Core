@@ -53,44 +53,51 @@ function _start() {
           case 0:
             _context2.next = 2;
             return Promise.all(_lotus.packages.map( /*#__PURE__*/function () {
-              var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(pName) {
-                var packageObj, module, _i, _Object$entries, _Object$entries$_i, name, fn, _i2, _Object$entries2, _Object$entries2$_i, _name, command;
+              var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(pPath) {
+                var packageObj, pName, module, commandSize, eventSize, _i, _Object$entries, _Object$entries$_i, name, fn, _i2, _Object$entries2, _Object$entries2$_i, _name, command, loadedText;
 
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
                     switch (_context.prev = _context.next) {
                       case 0:
                         _context.next = 2;
-                        return Promise.resolve("".concat(pName)).then(function (s) {
+                        return Promise.resolve("".concat(pPath)).then(function (s) {
                           return _interopRequireWildcard(require(s));
                         });
 
                       case 2:
                         packageObj = _context.sent;
+                        pName = packageObj.name;
                         module = {
                           name: pName,
                           commandNames: [],
                           enabled: {},
                           config: packageObj.config
                         };
+                        commandSize = 0;
+                        eventSize = 0;
 
-                        for (_i = 0, _Object$entries = Object.entries(packageObj.events); _i < _Object$entries.length; _i++) {
+                        for (_i = 0, _Object$entries = Object.entries(packageObj.events || {}); _i < _Object$entries.length; _i++) {
                           _Object$entries$_i = (0, _slicedToArray2["default"])(_Object$entries[_i], 2), name = _Object$entries$_i[0], fn = _Object$entries$_i[1];
                           if (!eventModules[name]) eventModules[name] = [fn];else eventModules[name].push(fn);
+                          eventSize++;
                         }
 
-                        for (_i2 = 0, _Object$entries2 = Object.entries(packageObj.commands); _i2 < _Object$entries2.length; _i2++) {
+                        for (_i2 = 0, _Object$entries2 = Object.entries(packageObj.commands || {}); _i2 < _Object$entries2.length; _i2++) {
                           _Object$entries2$_i = (0, _slicedToArray2["default"])(_Object$entries2[_i2], 2), _name = _Object$entries2$_i[0], command = _Object$entries2$_i[1];
                           command.moduleName = pName;
                           command.name = _name;
                           command.enabled = {};
                           commands.set(_name, command);
                           module.commandNames.push(_name);
+                          commandSize++;
                         }
 
                         modules.set(pName, module);
+                        loadedText = commandSize > 0 && eventSize > 0 ? " with ".concat(commandSize, " commands and ").concat(eventSize, " events") : commandSize > 0 ? " with ".concat(commandSize, " commands") : eventSize > 0 ? " with ".concat(eventSize, " events") : '';
+                        console.log("Loaded \"".concat(pName, "\"").concat(loadedText));
 
-                      case 7:
+                      case 12:
                       case "end":
                         return _context.stop();
                     }
