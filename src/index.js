@@ -16,12 +16,12 @@ async function start () {
     const packageObj = await import(pName)
     const module = { name: pName, commandNames: [], enabled: {}, config: packageObj.config }
 
-    for (const [name, fn] of Object.entries(packageObj.events)) {
+    for (const [name, fn] of Object.entries(packageObj.events || {})) {
       if (!eventModules[name]) eventModules[name] = [fn]
       else eventModules[name].push(fn)
     }
 
-    for (const [name, command] of Object.entries(packageObj.commands)) {
+    for (const [name, command] of Object.entries(packageObj.commands || {})) {
       command.moduleName = pName
       command.name = name
       command.enabled = {}
