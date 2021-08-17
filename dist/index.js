@@ -28,11 +28,16 @@ var client = new _discord.Client({
 });
 var commands = new Map();
 var modules = new Map();
+var defaultConfig = {
+  guild: {},
+  global: {}
+};
 var config = {};
 var global = {
   sequelize: sequelize,
   client: client,
   commands: commands,
+  defaultConfig: defaultConfig,
   config: config,
   modules: modules,
   configFile: _lotus["default"]
@@ -45,7 +50,7 @@ function start() {
 
 function _start() {
   _start = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-    var _loop, _i3, _Object$entries3;
+    var _loop, _i5, _Object$entries5;
 
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
@@ -54,7 +59,7 @@ function _start() {
             _context2.next = 2;
             return Promise.all(_lotus.packages.map( /*#__PURE__*/function () {
               var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(pPath) {
-                var packageObj, pName, module, commandSize, eventSize, _i, _Object$entries, _Object$entries$_i, name, fn, _i2, _Object$entries2, _Object$entries2$_i, _name, command, loadedText;
+                var packageObj, pName, module, commandSize, eventSize, _i, _Object$entries, _Object$entries$_i, name, fn, _i2, _Object$entries2, _Object$entries2$_i, _name, command, _i3, _Object$entries3, _Object$entries3$_i, _name2, value, _i4, _Object$entries4, _Object$entries4$_i, _name3, _value, loadedText;
 
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
@@ -71,8 +76,7 @@ function _start() {
                         module = {
                           name: pName,
                           commandNames: [],
-                          enabled: {},
-                          config: packageObj.config
+                          enabled: {}
                         };
                         commandSize = 0;
                         eventSize = 0;
@@ -93,11 +97,23 @@ function _start() {
                           commandSize++;
                         }
 
+                        if (packageObj.config) {
+                          for (_i3 = 0, _Object$entries3 = Object.entries(packageObj.config.global || {}); _i3 < _Object$entries3.length; _i3++) {
+                            _Object$entries3$_i = (0, _slicedToArray2["default"])(_Object$entries3[_i3], 2), _name2 = _Object$entries3$_i[0], value = _Object$entries3$_i[1];
+                            defaultConfig.global[_name2] = value;
+                          }
+
+                          for (_i4 = 0, _Object$entries4 = Object.entries(packageObj.config.guild || {}); _i4 < _Object$entries4.length; _i4++) {
+                            _Object$entries4$_i = (0, _slicedToArray2["default"])(_Object$entries4[_i4], 2), _name3 = _Object$entries4$_i[0], _value = _Object$entries4$_i[1];
+                            defaultConfig.guild[_name3] = _value;
+                          }
+                        }
+
                         modules.set(pName, module);
                         loadedText = commandSize > 0 && eventSize > 0 ? " with ".concat(commandSize, " commands and ").concat(eventSize, " events") : commandSize > 0 ? " with ".concat(commandSize, " commands") : eventSize > 0 ? " with ".concat(eventSize, " events") : '';
                         console.log("Loaded \"".concat(pName, "\"").concat(loadedText));
 
-                      case 12:
+                      case 13:
                       case "end":
                         return _context.stop();
                     }
@@ -112,9 +128,9 @@ function _start() {
 
           case 2:
             _loop = function _loop() {
-              var _Object$entries3$_i = (0, _slicedToArray2["default"])(_Object$entries3[_i3], 2),
-                  eventName = _Object$entries3$_i[0],
-                  events = _Object$entries3$_i[1];
+              var _Object$entries5$_i = (0, _slicedToArray2["default"])(_Object$entries5[_i5], 2),
+                  eventName = _Object$entries5$_i[0],
+                  events = _Object$entries5$_i[1];
 
               client.on(eventName, function () {
                 for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -127,7 +143,7 @@ function _start() {
               });
             };
 
-            for (_i3 = 0, _Object$entries3 = Object.entries(eventModules); _i3 < _Object$entries3.length; _i3++) {
+            for (_i5 = 0, _Object$entries5 = Object.entries(eventModules); _i5 < _Object$entries5.length; _i5++) {
               _loop();
             }
 
