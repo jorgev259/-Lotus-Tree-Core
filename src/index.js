@@ -7,15 +7,18 @@ const client = new Client({ intents: discordConfig.intents.map(i => Intents.FLAG
 
 const commands = new Map()
 const modules = new Map()
+
+const defaultConfig = { guild: {}, global: {} }
 const config = {}
-const global = { sequelize, client, commands, config, modules, configFile }
+
+const global = { sequelize, client, commands, defaultConfig, config, modules, configFile }
 const eventModules = {}
 
 async function start () {
   await Promise.all(packages.map(async pPath => {
     const packageObj = await import(pPath)
     const { name: pName } = packageObj
-    const module = { name: pName, commandNames: [], enabled: {}, config: packageObj.config }
+    const module = { name: pName, commandNames: [], enabled: {} }
     let commandSize = 0
     let eventSize = 0
 
@@ -33,6 +36,16 @@ async function start () {
       commands.set(name, command)
       module.commandNames.push(name)
       commandSize++
+    }
+
+    if (packageObj.config) {
+      for (const [name, value] of Object.entries(packageObj.config.global || {})) {
+        defaultConfig.global[name] = value
+      }
+
+      for (const [name, value] of Object.entries(packageObj.config.guild || {})) {
+        defaultConfig.guild[name] = value
+      }
     }
 
     modules.set(pName, module)
