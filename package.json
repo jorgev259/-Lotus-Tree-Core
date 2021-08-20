@@ -13,7 +13,7 @@
   },
   "scripts": {
     "start": "node dist",
-    "dev": "nodemon --exec babel-node src/index.js",
+    "dev": "babel-node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src --out-dir dist"
   },
@@ -22,7 +22,6 @@
     "@babel/core": "^7.15.0",
     "@babel/node": "^7.14.9",
     "@babel/plugin-transform-runtime": "^7.15.0",
-    "@babel/preset-env": "^7.15.0",
-    "nodemon": "1.12.1"
+    "@babel/preset-env": "^7.15.0"
   }
 }

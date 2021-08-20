@@ -1,4 +1,0 @@
-{
-    "watch": ["../packages/**.js", "src/**.js"],
-    "ignore": ["dist/*"]
-}
