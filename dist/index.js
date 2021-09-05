@@ -59,7 +59,7 @@ function _start() {
             _context2.next = 2;
             return Promise.all(_lotus.packages.map( /*#__PURE__*/function () {
               var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(pPath) {
-                var packageObj, pName, module, commandSize, eventSize, _i, _Object$entries, _Object$entries$_i, name, fn, _i2, _Object$entries2, _Object$entries2$_i, _name, command, _i3, _Object$entries3, _Object$entries3$_i, _name2, value, _i4, _Object$entries4, _Object$entries4$_i, _name3, _value, loadedText;
+                var packageObj, pName, preload, module, commandSize, eventSize, _i, _Object$entries, _Object$entries$_i, name, fn, _i2, _Object$entries2, _Object$entries2$_i, _name, command, _i3, _Object$entries3, _Object$entries3$_i, _name2, value, _i4, _Object$entries4, _Object$entries4$_i, _name3, _value, loadedText;
 
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
@@ -72,7 +72,8 @@ function _start() {
 
                       case 2:
                         packageObj = _context.sent;
-                        pName = packageObj.name;
+                        pName = packageObj.name, preload = packageObj.preload;
+                        _context.prev = 4;
                         module = {
                           name: pName,
                           commandNames: [],
@@ -81,6 +82,15 @@ function _start() {
                         commandSize = 0;
                         eventSize = 0;
 
+                        if (!preload) {
+                          _context.next = 11;
+                          break;
+                        }
+
+                        _context.next = 11;
+                        return preload(sequelize);
+
+                      case 11:
                         for (_i = 0, _Object$entries = Object.entries(packageObj.events || {}); _i < _Object$entries.length; _i++) {
                           _Object$entries$_i = (0, _slicedToArray2["default"])(_Object$entries[_i], 2), name = _Object$entries$_i[0], fn = _Object$entries$_i[1];
                           if (!eventModules[name]) eventModules[name] = [fn];else eventModules[name].push(fn);
@@ -112,13 +122,20 @@ function _start() {
                         modules.set(pName, module);
                         loadedText = commandSize > 0 && eventSize > 0 ? " with ".concat(commandSize, " commands and ").concat(eventSize, " events") : commandSize > 0 ? " with ".concat(commandSize, " commands") : eventSize > 0 ? " with ".concat(eventSize, " events") : '';
                         console.log("Loaded \"".concat(pName, "\"").concat(loadedText));
+                        _context.next = 22;
+                        break;
 
-                      case 13:
+                      case 19:
+                        _context.prev = 19;
+                        _context.t0 = _context["catch"](4);
+                        console.log("Failed to load ".concat(pName, " with error: ").concat(_context.t0));
+
+                      case 22:
                       case "end":
                         return _context.stop();
                     }
                   }
-                }, _callee);
+                }, _callee, null, [[4, 19]]);
               }));
 
               return function (_x) {
