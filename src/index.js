@@ -3,21 +3,21 @@ import { Client, Intents } from 'discord.js'
 import configFile, { sequelize as seqConfig, discord as discordConfig, packages } from './config/lotus.json'
 
 const sequelize = new Sequelize(seqConfig)
-const client = new Client({ intents: discordConfig.intents.map(i => Intents.FLAGS[i]) })
 
 const commands = new Map()
 const modules = new Map()
+const intentsSet = new Set()
+const partialsSet = new Set()
 
 const defaultConfig = { guild: {}, global: {} }
 const config = {}
 
-const globals = { sequelize, client, commands, defaultConfig, config, modules, configFile }
 const eventModules = {}
 
 async function start () {
   await Promise.all(packages.map(async pPath => {
     const packageObj = await import(pPath)
-    const { name: pName, preload } = packageObj
+    const { name: pName, preload, intents = [], partials = [] } = packageObj
     try {
       const module = { name: pName, commandNames: [], enabled: {} }
       let commandSize = 0
@@ -64,10 +64,16 @@ async function start () {
               ))
 
       console.log(`Loaded "${pName}"${loadedText}`)
+
+      intents.forEach(i => intentsSet.add(i))
+      partials.forEach(p => partialsSet.add(p))
     } catch (err) {
       console.log(`Failed to load ${pName} with error: ${err}`)
     }
   }))
+
+  const client = new Client({ intents: Array.from(intentsSet).map(i => Intents.FLAGS[i]), partials: Array.from(partialsSet) })
+  const globals = { sequelize, client, commands, defaultConfig, config, modules, configFile }
 
   for (const [eventName, events] of Object.entries(eventModules)) {
     client.on(eventName, (...args) =>
