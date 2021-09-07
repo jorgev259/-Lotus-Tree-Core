@@ -33,7 +33,7 @@ var defaultConfig = {
   global: {}
 };
 var config = {};
-var global = {
+var globals = {
   sequelize: sequelize,
   client: client,
   commands: commands,
@@ -155,7 +155,7 @@ function _start() {
                 }
 
                 return events.forEach(function (item) {
-                  return item.apply(void 0, [global].concat(args));
+                  return item.apply(void 0, [globals].concat(args));
                 });
               });
             };
