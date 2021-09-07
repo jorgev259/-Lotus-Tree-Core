@@ -11,7 +11,7 @@ const modules = new Map()
 const defaultConfig = { guild: {}, global: {} }
 const config = {}
 
-const global = { sequelize, client, commands, defaultConfig, config, modules, configFile }
+const globals = { sequelize, client, commands, defaultConfig, config, modules, configFile }
 const eventModules = {}
 
 async function start () {
@@ -71,7 +71,7 @@ async function start () {
 
   for (const [eventName, events] of Object.entries(eventModules)) {
     client.on(eventName, (...args) =>
-      events.forEach(item => item(global, ...args))
+      events.forEach(item => item(globals, ...args))
     )
   }
 
