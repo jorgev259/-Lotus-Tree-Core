@@ -15,6 +15,8 @@ const config = {}
 const eventModules = {}
 
 async function start () {
+  if (configFile.discord.intents) configFile.discord.intents.forEach(i => intentsSet.add(i))
+
   await Promise.all(packages.map(async pPath => {
     const packageObj = await import(pPath)
     const { name: pName, preload, intents = [], partials = [] } = packageObj
