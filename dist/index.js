@@ -21,27 +21,15 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || (0, _typeof2["default"])(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var sequelize = new _sequelize.Sequelize(_lotus.sequelize);
-var client = new _discord.Client({
-  intents: _lotus.discord.intents.map(function (i) {
-    return _discord.Intents.FLAGS[i];
-  })
-});
 var commands = new Map();
 var modules = new Map();
+var intentsSet = new Set();
+var partialsSet = new Set();
 var defaultConfig = {
   guild: {},
   global: {}
 };
 var config = {};
-var globals = {
-  sequelize: sequelize,
-  client: client,
-  commands: commands,
-  defaultConfig: defaultConfig,
-  config: config,
-  modules: modules,
-  configFile: _lotus["default"]
-};
 var eventModules = {};
 
 function start() {
@@ -50,7 +38,7 @@ function start() {
 
 function _start() {
   _start = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-    var _loop, _i5, _Object$entries5;
+    var client, globals, _loop, _i5, _Object$entries5;
 
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
@@ -59,7 +47,7 @@ function _start() {
             _context2.next = 2;
             return Promise.all(_lotus.packages.map( /*#__PURE__*/function () {
               var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(pPath) {
-                var packageObj, pName, preload, module, commandSize, eventSize, _i, _Object$entries, _Object$entries$_i, name, fn, _i2, _Object$entries2, _Object$entries2$_i, _name, command, _i3, _Object$entries3, _Object$entries3$_i, _name2, value, _i4, _Object$entries4, _Object$entries4$_i, _name3, _value, loadedText;
+                var packageObj, pName, preload, _packageObj$intents, intents, _packageObj$partials, partials, module, commandSize, eventSize, _i, _Object$entries, _Object$entries$_i, name, fn, _i2, _Object$entries2, _Object$entries2$_i, _name, command, _i3, _Object$entries3, _Object$entries3$_i, _name2, value, _i4, _Object$entries4, _Object$entries4$_i, _name3, _value, loadedText;
 
                 return _regenerator["default"].wrap(function _callee$(_context) {
                   while (1) {
@@ -72,7 +60,7 @@ function _start() {
 
                       case 2:
                         packageObj = _context.sent;
-                        pName = packageObj.name, preload = packageObj.preload;
+                        pName = packageObj.name, preload = packageObj.preload, _packageObj$intents = packageObj.intents, intents = _packageObj$intents === void 0 ? [] : _packageObj$intents, _packageObj$partials = packageObj.partials, partials = _packageObj$partials === void 0 ? [] : _packageObj$partials;
                         _context.prev = 4;
                         module = {
                           name: pName,
@@ -122,20 +110,26 @@ function _start() {
                         modules.set(pName, module);
                         loadedText = commandSize > 0 && eventSize > 0 ? " with ".concat(commandSize, " commands and ").concat(eventSize, " events") : commandSize > 0 ? " with ".concat(commandSize, " commands") : eventSize > 0 ? " with ".concat(eventSize, " events") : '';
                         console.log("Loaded \"".concat(pName, "\"").concat(loadedText));
-                        _context.next = 22;
+                        intents.forEach(function (i) {
+                          return intentsSet.add(i);
+                        });
+                        partials.forEach(function (p) {
+                          return partialsSet.add(p);
+                        });
+                        _context.next = 24;
                         break;
 
-                      case 19:
-                        _context.prev = 19;
+                      case 21:
+                        _context.prev = 21;
                         _context.t0 = _context["catch"](4);
                         console.log("Failed to load ".concat(pName, " with error: ").concat(_context.t0));
 
-                      case 22:
+                      case 24:
                       case "end":
                         return _context.stop();
                     }
                   }
-                }, _callee, null, [[4, 19]]);
+                }, _callee, null, [[4, 21]]);
               }));
 
               return function (_x) {
@@ -144,6 +138,22 @@ function _start() {
             }()));
 
           case 2:
+            client = new _discord.Client({
+              intents: Array.from(intentsSet).map(function (i) {
+                return _discord.Intents.FLAGS[i];
+              }),
+              partials: Array.from(partialsSet)
+            });
+            globals = {
+              sequelize: sequelize,
+              client: client,
+              commands: commands,
+              defaultConfig: defaultConfig,
+              config: config,
+              modules: modules,
+              configFile: _lotus["default"]
+            };
+
             _loop = function _loop() {
               var _Object$entries5$_i = (0, _slicedToArray2["default"])(_Object$entries5[_i5], 2),
                   eventName = _Object$entries5$_i[0],
@@ -169,7 +179,7 @@ function _start() {
             });
             client.login(_lotus.discord.token);
 
-          case 6:
+          case 8:
           case "end":
             return _context2.stop();
         }
