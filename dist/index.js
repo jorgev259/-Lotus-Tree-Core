@@ -44,7 +44,10 @@ function _start() {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _context2.next = 2;
+            if (_lotus["default"].discord.intents) _lotus["default"].discord.intents.forEach(function (i) {
+              return intentsSet.add(i);
+            });
+            _context2.next = 3;
             return Promise.all(_lotus.packages.map( /*#__PURE__*/function () {
               var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(pPath) {
                 var packageObj, pName, preload, _packageObj$intents, intents, _packageObj$partials, partials, module, commandSize, eventSize, _i, _Object$entries, _Object$entries$_i, name, fn, _i2, _Object$entries2, _Object$entries2$_i, _name, command, _i3, _Object$entries3, _Object$entries3$_i, _name2, value, _i4, _Object$entries4, _Object$entries4$_i, _name3, _value, loadedText;
@@ -137,7 +140,7 @@ function _start() {
               };
             }()));
 
-          case 2:
+          case 3:
             client = new _discord.Client({
               intents: Array.from(intentsSet).map(function (i) {
                 return _discord.Intents.FLAGS[i];
@@ -179,7 +182,7 @@ function _start() {
             });
             client.login(_lotus.discord.token);
 
-          case 8:
+          case 9:
           case "end":
             return _context2.stop();
         }
