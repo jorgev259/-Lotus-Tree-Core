@@ -11,3 +11,4 @@ local_modules
 temp
 node_modules
 package-lock.json
+db.sqlite

@@ -18,7 +18,9 @@ async function start () {
   if (configFile.discord.intents) configFile.discord.intents.forEach(i => intentsSet.add(i))
 
   await Promise.all(packages.map(async pPath => {
-    const packageObj = await import(pPath)
+    const packageObjTemp = await import(pPath)
+    const packageObj = packageObjTemp.default || packageObjTemp
+
     const { name: pName, preload, intents = [], partials = [] } = packageObj
     try {
       const module = { name: pName, commandNames: [], enabled: {} }
