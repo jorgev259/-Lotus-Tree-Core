@@ -13,8 +13,13 @@
   },
   "scripts": {
     "start": "node lib",
-    "dev": "babel-node --root-mode upward src/index.js",
+    "dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel --root-mode upward src --out-dir lib"
+  },
+  "pre-commit": ["build"],
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "pre-commit": "^1.2.2"
   }
 }

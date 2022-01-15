@@ -1,0 +1,4 @@
+{
+    "watch": ["../packages/**/lib/**", "./src/**"],
+    "exec": "babel-node --root-mode upward src/index.js"
+}
