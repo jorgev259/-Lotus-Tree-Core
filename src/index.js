@@ -55,6 +55,8 @@ async function start () {
         }
       }
 
+      if (packageObj.about) module.about = packageObj.about
+
       modules.set(pName, module)
 
       const loadedText = commandSize > 0 && eventSize > 0
