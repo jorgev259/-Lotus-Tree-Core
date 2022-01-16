@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize'
 import { Client, Intents } from 'discord.js'
-import configFile, { sequelize as seqConfig, discord as discordConfig, packages } from './config/lotus.json'
+import configFile, { sequelize as seqConfig, discord as discordConfig, packages } from '../config/lotus.json'
 
 const sequelize = new Sequelize(seqConfig)
 

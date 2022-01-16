@@ -1,8 +1,9 @@
 {
   "name": "lotus-tree",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "dependencies": {
     "@babel/runtime": "^7.14.8",
+    "@lotus-tree/command-handler": "^2.0.0",
     "discord.js": "^13.0.0",
     "mariadb": "^2.5.4",
     "mysql2": "^2.3.0",
@@ -15,8 +16,8 @@
   "scripts": {
     "start": "node lib",
     "dev": "nodemon",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src --out-dir lib"
+    "build": "babel src --out-dir lib",
+    "prepublishOnly": "yarn build"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.7",
