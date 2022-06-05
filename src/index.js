@@ -88,7 +88,7 @@ async function start () {
   }
 
   client.once('ready', () => {
-    console.log('Discord bot started!')
+    console.log(`Discord bot started! Logged in as ${client.user.tag}`)
   })
 
   client.login(discordConfig.token)
