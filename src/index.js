@@ -37,10 +37,8 @@ async function start () {
       }
 
       for (const [name, command] of Object.entries(packageObj.commands || {})) {
-        command.moduleName = pName
-        command.name = name
-        command.enabled = {}
-        commands.set(name, command)
+        const newCommand = { ...command, moduleName: pName, name, enabled: {} }
+        commands.set(name, newCommand)
         module.commandNames.push(name)
         commandSize++
       }
@@ -74,7 +72,8 @@ async function start () {
       intents.forEach(i => intentsSet.add(i))
       partials.forEach(p => partialsSet.add(p))
     } catch (err) {
-      console.log(`Failed to load ${pName} with error: ${err}`)
+      console.log(`Failed to load ${pName} with error:`)
+      console.log(err)
     }
   }))
 
