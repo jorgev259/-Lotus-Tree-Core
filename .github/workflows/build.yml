@@ -31,3 +31,7 @@ jobs:
           git add -A
           git diff-index --quiet HEAD || git commit -m 'Deploy!'
           git push
+
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
