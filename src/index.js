@@ -82,7 +82,13 @@ async function start () {
 
   for (const [eventName, events] of Object.entries(eventModules)) {
     client.on(eventName, (...args) =>
-      events.forEach(item => item(globals, ...args))
+      events.forEach(item => {
+        try {
+          item(globals, ...args)
+        } catch (err) {
+          console.log(err)
+        }
+      })
     )
   }
 
