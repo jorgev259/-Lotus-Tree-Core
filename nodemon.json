@@ -1,4 +1,4 @@
 {
-    "watch": ["../packages/**/dev/**", "./src/**"],
-    "exec": "babel-node src/index.js"
+    "watch": ["../Lotus-Tree-packages/**", "./src/**"],
+    "exec": "npm run start-dev"
 }

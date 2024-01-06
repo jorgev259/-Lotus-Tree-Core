@@ -1,0 +1,11 @@
+{
+  "sequelize": {
+    "dialect": "sqlite",
+    "storage": "./db.sqlite"
+  },
+  "discord": {
+    "token": ""
+  },
+  "owners": [],
+  "packages": []
+}

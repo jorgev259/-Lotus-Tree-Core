@@ -1,6 +1,9 @@
 module.exports = {
   presets: ['@babel/preset-env'],
-  plugins: [
-    ['@babel/plugin-transform-runtime', { regenerator: true }]
-  ]
+  env: {
+    development: {
+      sourceMaps: 'inline',
+      retainLines: true
+    }
+  }
 }
