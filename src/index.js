@@ -39,7 +39,7 @@ packages.forEach(pkg => {
 
   for (const [name, fn] of Object.entries(packageEvents)) {
     if (!events.has(name)) events.set(name, [fn])
-    else events.set([...events.get(name), fn])
+    else events.set(name, [...events.get(name), fn])
   }
 
   for (const [name, command] of Object.entries(packageCommands)) {
