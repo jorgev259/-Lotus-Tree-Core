@@ -2,9 +2,7 @@
 // import path from 'path'
 
 export async function loadModule (packagePath, sequelize) {
-  let packageObj = await import(packagePath)
-  if (packageObj.__esModule) packageObj = packageObj.default
-
+  const { default: packageObj } = await import(packagePath)
   const { name } = packageObj
 
   try {

@@ -1,4 +1,4 @@
 {
     "watch": ["../Lotus-Tree-packages/**", "./src/**"],
-    "exec": "npm run start-dev"
+    "exec": "npm run start"
 }
