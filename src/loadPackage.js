@@ -1,22 +1,24 @@
-// import fs from 'fs-extra'
-// import path from 'path'
+import fs from 'fs-extra'
+import path from 'path'
 
 export async function loadModule (packagePath, sequelize) {
   const { default: packageObj } = await import(packagePath)
   const { name } = packageObj
 
   try {
-    const { preload, /* defaultConfig, */ commands = {}, events = {} } = packageObj
+    const { preload, localConfig, commands = {}, events = {} } = packageObj
 
-    /* if (defaultConfig) {
+    if (localConfig) {
       const configPath = path.join('./config/', `${name}.json`)
       const configExists = await fs.pathExists(configPath)
 
       if (!configExists) {
-        await fs.writeJson(configPath, defaultConfig)
-        throw new Error(`${configPath} not found. Edit the file then restart the bot`)
+        await fs.writeJson(configPath, localConfig)
+        throw new Error(`${configPath} has been created. Edit the file then restart the bot`)
+      } else {
+        packageObj.localConfig = await fs.readJSON(configPath)
       }
-    } */
+    }
     if (preload) await preload(sequelize)
 
     const commandSize = Object.values(commands).length

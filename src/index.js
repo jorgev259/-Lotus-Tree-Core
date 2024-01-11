@@ -17,6 +17,7 @@ const partials = new Set()
 
 const defaultConfig = { guild: {}, global: {} }
 const config = {}
+const localConfig = {}
 
 const packages = (
   await Promise.all(
@@ -29,10 +30,12 @@ packages.forEach(pkg => {
     name,
     intents: packageIntents = [], partials: packagePartials = [],
     events: packageEvents = {}, commands: packageCommands = {},
-    config = { guild: {}, global: {} }
+    config = { guild: {}, global: {} },
+    localConfig: pkgLocalConfig = {}
   } = pkg
 
   const commandNames = []
+  localConfig[name] = {}
 
   packageIntents.forEach(intent => intents.add(intent))
   packagePartials.forEach(partial => partials.add(partial))
@@ -58,12 +61,16 @@ packages.forEach(pkg => {
     defaultConfig.guild[name] = value
   }
 
+  for (const [configName, value] of Object.entries(pkgLocalConfig)) {
+    localConfig[name][configName] = value
+  }
+
   const module = { name, commandNames, enabled: {} }
   modules.set(name, module)
 })
 
 const client = new Client({ intents: Array.from(intents), partials: Array.from(partials) })
-const globals = { sequelize, client, commands, defaultConfig, config, modules, lotusConfig }
+const globals = { sequelize, client, commands, defaultConfig, config, localConfig, modules, lotusConfig }
 
 for (const [eventName, eventList] of events.entries()) {
   client.on(eventName, (...args) =>
